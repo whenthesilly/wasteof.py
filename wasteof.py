@@ -1,109 +1,151 @@
 import requests
 
+
 class AuthenticationError(Exception):
     pass
 
-class users():
+
+class users:
     def topUsers():
-        r = requests.get('https://api.wasteof.money/explore/users/top')
-        return(r.json())
-    
+        r = requests.get("https://api.wasteof.money/explore/users/top")
+        return r.json()
+
     def IdToUser(id):
         r = requests.get(f"https://api.wasteof.money/username-from-id/{id}")
         j = r.json()
-        return(j["username"])
-    
+        return j["username"]
+
     def isUserAvailable(username):
-        r = requests.get(f"https://api.wasteof.money/username-available?username={username}")
+        r = requests.get(
+            f"https://api.wasteof.money/username-available?username={username}"
+        )
         j = r.json()
-        return(j["available"])
-class session():
+        return j["available"]
+
+
+class session:
     def auth(username, password):
-        r = requests.post("https://api.wasteof.money/session", json = {"username": username, "password": password})
+        r = requests.post(
+            "https://api.wasteof.money/session",
+            json={"username": username, "password": password},
+        )
         j = r.json()
         try:
-            return(j["token"])
+            return j["token"]
         except:
             if "error" in j:
                 raise AuthenticationError(j["error"])
+
     def get(token):
-        r = requests.get("https://api.wasteof.money/session", headers={"Authorization":token})
-        return(r.json())
-    
+        r = requests.get(
+            "https://api.wasteof.money/session", headers={"Authorization": token}
+        )
+        return r.json()
+
     def remove(token):
-        r = requests.delete("https://api.wasteof.money/session", headers={"Authorization":token})
+        r = requests.delete(
+            "https://api.wasteof.money/session", headers={"Authorization": token}
+        )
         j = r.json()
-        return(j["ok"])
+        return j["ok"]
 
 
-class posts():
-    
-    def trending(timeframe = "week"):
-        r = requests.get(f'https://api.wasteof.money/explore/posts/trending?timeframe={timeframe}')
-        return(r.json())
-    
+class posts:
+    def trending(timeframe="week"):
+        r = requests.get(
+            f"https://api.wasteof.money/explore/posts/trending?timeframe={timeframe}"
+        )
+        return r.json()
+
     def random():
         r = requests.get("https://api.wasteof.money/random-post")
-        return(r.json())
-    
+        return r.json()
+
     def get(id):
         r = requests.get(f"https://api.wasteof.money/posts/{id}")
-        return(r.json())
-    
+        return r.json()
+
     def getComments(id, page=1):
         r = requests.get(f"https://api.wasteof.money/posts/{id}/comments?page={page}")
-        return(r.json())
-    
+        return r.json()
+
     def GetCommentReplies(id, page=1):
         r = requests.get(f"https://api.wasteof.money/comments/{id}/replies?page={page}")
-        return(r.json())
-    
+        return r.json()
+
     def create(token, content):
-        r = requests.post("https://api.wasteof.money/posts", headers={"Authorization":token}, json={"post":content})
+        r = requests.post(
+            "https://api.wasteof.money/posts",
+            headers={"Authorization": token},
+            json={"post": content},
+        )
         j = r.json()
-        return(j["id"])
-    
+        return j["id"]
+
     def edit(token, content, id):
-        r = requests.put(f"https://api.wasteof.money/posts/{id}",headers={"Authorization":token}, json={"post":content})
-        return(r.json())
-    
+        r = requests.put(
+            f"https://api.wasteof.money/posts/{id}",
+            headers={"Authorization": token},
+            json={"post": content},
+        )
+        return r.json()
+
     def delete(token, id):
-        r = requests.delete(f"https://api.wasteof.money/posts/{id}",headers={"Authorization":token})
+        r = requests.delete(
+            f"https://api.wasteof.money/posts/{id}", headers={"Authorization": token}
+        )
         j = r.json()
-        return(j["ok"])
+        return j["ok"]
 
-class messages():
+
+class messages:
     def getRead(token):
-        r = requests.get("https://api.wasteof.money/messages/read", headers={"Authorization":token})
-        return(r.json())
-    
-    def getUnread(token):
-        r = requests.get("https://api.wasteof.money/messages/unread", headers={"Authorization":token})
-        return(r.json())
-    
-    def count(token):
-        r = requests.get("https://api.wasteof.money/messages/count", headers={"Authorization":token})
-        j = r.json()
-        return(int(j["count"]))
-    
-    #below ids need to be in an array
-    def markRead(token,id):
-        r = requests.post("https://api.wasteof.money/messages/mark/read", json = {"messages":id} , headers = {"Authorization":token})
-        j = r.json()
-        return(j["ok"])
-    
-    def markUnread(token,id):
-        r = requests.post("https://api.wasteof.money/messages/mark/unread", json = {"messages":id} , headers = {"Authorization":token})
-        j = r.json()
-        return(j["ok"])
+        r = requests.get(
+            "https://api.wasteof.money/messages/read", headers={"Authorization": token}
+        )
+        return r.json()
 
-class oauth():
+    def getUnread(token):
+        r = requests.get(
+            "https://api.wasteof.money/messages/unread",
+            headers={"Authorization": token},
+        )
+        return r.json()
+
+    def count(token):
+        r = requests.get(
+            "https://api.wasteof.money/messages/count", headers={"Authorization": token}
+        )
+        j = r.json()
+        return int(j["count"])
+
+    # below ids need to be in an array
+    def markRead(token, id):
+        r = requests.post(
+            "https://api.wasteof.money/messages/mark/read",
+            json={"messages": id},
+            headers={"Authorization": token},
+        )
+        j = r.json()
+        return j["ok"]
+
+    def markUnread(token, id):
+        r = requests.post(
+            "https://api.wasteof.money/messages/mark/unread",
+            json={"messages": id},
+            headers={"Authorization": token},
+        )
+        j = r.json()
+        return j["ok"]
+
+
+class oauth:
     def github():
         r = requests.get("https://api.wasteof.money/sessions/oauth/github/url")
         j = r.json()
-        return(j["url"])
-    
+        return j["url"]
+
     def google():
         r = requests.get("https://api.wasteof.money/sessions/oauth/google/url")
         j = r.json()
-        return(j["url"])
+        return j["url"]
