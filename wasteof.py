@@ -45,6 +45,32 @@ class posts():
     def random():
         r = requests.get("https://api.wasteof.money/random-post")
         return(r.json())
+    
+    def get(id):
+        r = requests.get(f"https://api.wasteof.money/posts/{id}")
+        return(r.json())
+    
+    def getComments(id, page=1):
+        r = requests.get(f"https://api.wasteof.money/posts/{id}/comments?page={page}")
+        return(r.json())
+    
+    def GetCommentReplies(id, page=1):
+        r = requests.get(f"https://api.wasteof.money/comments/{id}/replies?page={page}")
+        return(r.json())
+    
+    def create(token, content):
+        r = requests.post("https://api.wasteof.money/posts", headers={"Authorization":token}, json={"post":content})
+        j = r.json()
+        return(j["id"])
+    
+    def edit(token, content, id):
+        r = requests.put(f"https://api.wasteof.money/posts/{id}",headers={"Authorization":token}, json={"post":content})
+        return(r.json())
+    
+    def delete(token, id):
+        r = requests.delete(f"https://api.wasteof.money/posts/{id}",headers={"Authorization":token})
+        j = r.json()
+        return(j["ok"])
 
 class messages():
     def getRead(token):
@@ -60,6 +86,7 @@ class messages():
         j = r.json()
         return(int(j["count"]))
     
+    #below ids need to be in an array
     def markRead(token,id):
         r = requests.post("https://api.wasteof.money/messages/mark/read", json = {"messages":id} , headers = {"Authorization":token})
         j = r.json()
@@ -69,3 +96,14 @@ class messages():
         r = requests.post("https://api.wasteof.money/messages/mark/unread", json = {"messages":id} , headers = {"Authorization":token})
         j = r.json()
         return(j["ok"])
+
+class oauth():
+    def github():
+        r = requests.get("https://api.wasteof.money/sessions/oauth/github/url")
+        j = r.json()
+        return(j["url"])
+    
+    def google():
+        r = requests.get("https://api.wasteof.money/sessions/oauth/google/url")
+        j = r.json()
+        return(j["url"])
