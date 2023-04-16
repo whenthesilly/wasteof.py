@@ -81,7 +81,7 @@ class posts:
         )
         j = r.json()
         return j["id"]
-    
+
     def repost(token, content, id):
         r = requests.post(
             "https://api.wasteof.money/posts",
@@ -141,9 +141,12 @@ class posts:
         )
         j = r.json()
         return j["ok"]
-    
+
     def toggleLove(token, id):
-        r = requests.post(f"https://api.wasteof.money/posts/{id}/loves", headers={"Authorization": token})
+        r = requests.post(
+            f"https://api.wasteof.money/posts/{id}/loves",
+            headers={"Authorization": token},
+        )
         j = r.json()
         return j["ok"]
 
@@ -203,3 +206,13 @@ class oauth:
         r = requests.get("https://api.wasteof.money/sessions/oauth/google/url")
         j = r.json()
         return j["url"]
+
+
+class search:
+    def users(query):
+        r = requests.get(f"https://api.wasteof.money/search/users/?q={query}")
+        return r.json()
+
+    def posts(query):
+        r = requests.get(f"https://api.wasteof.money/search/posts/?q={query}")
+        return r.json()
