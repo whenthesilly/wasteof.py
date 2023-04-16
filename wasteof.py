@@ -1,7 +1,7 @@
 import requests
 
 
-class AuthenticationError(Exception):
+class GeneralError(Exception):
     pass
 
 
@@ -34,7 +34,7 @@ class session:
             return j["token"]
         except:
             if "error" in j:
-                raise AuthenticationError(j["error"])
+                raise GeneralError(j["error"])
 
     def get(token):
         r = requests.get(
@@ -81,6 +81,15 @@ class posts:
         )
         j = r.json()
         return j["id"]
+    
+    def repost(token, content, id):
+        r = requests.post(
+            "https://api.wasteof.money/posts",
+            headers={"Authorization": token},
+            json={"post": content, "repost": id},
+        )
+        j = r.json()
+        return j["id"]
 
     def edit(token, content, id):
         r = requests.put(
@@ -96,6 +105,51 @@ class posts:
         )
         j = r.json()
         return j["ok"]
+
+    def deleteComment(token, id):
+        r = requests.delete(
+            f"https://api.wasteof.money/comments/{id}", headers={"Authorization": token}
+        )
+        j = r.json()
+        try:
+            return j["ok"]
+        except:
+            if "error" in j:
+                raise GeneralError(j["error"])
+
+    def pin(token, id):
+        r = requests.post(
+            f"https://api.wasteof.money/posts/{id}/pin",
+            headers={"Authorization": token},
+        )
+        j = r.json()
+        return j["ok"]
+
+    def unpin(token, id):
+        r = requests.post(
+            f"https://api.wasteof.money/posts/{id}/unpin",
+            headers={"Authorization": token},
+        )
+        j = r.json()
+        return j["ok"]
+
+    def report(token, id, type, reason):
+        r = requests.post(
+            f"https://api.wasteof.money/posts/{id}/report",
+            headers={"Authorization": token},
+            json={"type": type, "reason": reason},
+        )
+        j = r.json()
+        return j["ok"]
+    
+    def toggleLove(token, id):
+        r = requests.post(f"https://api.wasteof.money/posts/{id}/loves", headers={"Authorization": token})
+        j = r.json()
+        return j["ok"]
+
+    def didUserLove(id, user):
+        r = requests.get(f"https://api.wasteof.money/posts/{id}/loves/{user}")
+        return r.json()
 
 
 class messages:
