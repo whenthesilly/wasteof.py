@@ -128,6 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#what i did myself
+# what i did myself
 test.py
 examply.py
+beta.py
+# beta.py is a cursed attempt at docstring'ing the code, but radi8 made it with chatgpt and it invented the conversation endpoint.

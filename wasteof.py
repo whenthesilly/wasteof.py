@@ -22,6 +22,28 @@ class users:
         j = r.json()
         return j["available"]
 
+    def getWall(username, page=1):
+        r = requests.get(f"https://api.wasteof.money/users/{username}/wall?page={page}")
+        return r.json()
+
+    def postToWall(username, token, content):
+        r = requests.post(
+            f"https://api.wasteof.money/users/{username}/wall",
+            headers={"Authorization": token},
+            json={"content": content},
+        )
+        j = r.json()
+        return j["id"]
+
+    def replyOnWall(username, token, content, parent):
+        r = requests.post(
+            f"https://api.wasteof.money/users/{username}/wall",
+            headers={"Authorization": token},
+            json={"content": content, "parent": parent},
+        )
+        j = r.json()
+        return j["id"]
+
 
 class session:
     def auth(username, password):
@@ -105,6 +127,24 @@ class posts:
         )
         j = r.json()
         return j["ok"]
+
+    def comment(token, id, content):
+        r = requests.post(
+            f"https://api.wasteof.money/posts/{id}/comments",
+            headers={"Authorization": token},
+            json={"content": content},
+        )
+        j = r.json()
+        return j["id"]
+
+    def replyToComment(token, id, content, parent):
+        r = requests.post(
+            f"https://api.wasteof.money/posts/{id}/comments",
+            headers={"Authorization": token},
+            json={"content": content, "parent": parent},
+        )
+        j = r.json()
+        return j["id"]
 
     def deleteComment(token, id):
         r = requests.delete(
@@ -216,3 +256,9 @@ class search:
     def posts(query):
         r = requests.get(f"https://api.wasteof.money/search/posts/?q={query}")
         return r.json()
+
+
+# class settings:
+#   def get(token):
+#    r = requests.get("https://api.wasteof.money/settings", headers={"Authorization": token})
+#    return r.json()
