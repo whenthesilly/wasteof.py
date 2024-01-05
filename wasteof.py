@@ -14,6 +14,22 @@ class AuthenticationError(Exception):
     pass
 
 class users:
+
+    def get(username: str) -> dict:
+        """a function to get the info of a user
+        Args:
+            username (str): a wasteof.money username
+        
+        Returns:
+            dict: the info of the user you requested
+            """
+        r = requests.get(f"https://api.wasteof.money/users/{username}")
+        j = r.json()
+        if not "error" in j:
+            return j
+        else:
+            raise UnknownUserError(j["error"])
+
     def topUsers() -> dict:
         """a function to get top users
 
@@ -113,7 +129,7 @@ class users:
         else:
             raise WallError(j["error"])
 
-    def replyOnWall(username: str, token: str, content: str, parent: str) ->:
+    def replyOnWall(username: str, token: str, content: str, parent: str) -> str:
         """a function to reply to a wall comment
 
         Args:
@@ -126,7 +142,7 @@ class users:
             WallError: an error containing the error from the server
 
         Returns:
-            : the comment ID
+            str: the comment ID
         """        
         r = requests.post(
             f"https://api.wasteof.money/users/{username}/wall",
