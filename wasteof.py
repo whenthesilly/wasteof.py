@@ -4,25 +4,28 @@ import requests
 class GeneralError(Exception):
     pass
 
+
 class UnknownUserError(Exception):
     pass
+
 
 class WallError(Exception):
     pass
 
+
 class AuthenticationError(Exception):
     pass
 
-class users:
 
+class users:
     def get(username: str) -> dict:
         """a function to get the info of a user
         Args:
             username (str): a wasteof.money username
-        
+
         Returns:
             dict: the info of the user you requested
-            """
+        """
         r = requests.get(f"https://api.wasteof.money/users/{username}")
         j = r.json()
         if not "error" in j:
@@ -35,7 +38,7 @@ class users:
 
         Returns:
             dict: a dict containing top users
-        """ 
+        """
         r = requests.get("https://api.wasteof.money/explore/users/top")
         return r.json()
 
@@ -44,13 +47,13 @@ class users:
 
         Args:
             id (str): a wasteof.money user ID
-        
+
         Raises:
             UnknownUserError: an error containing the error from the server
 
         Returns:
             str: a wasteof.money username
-        """   
+        """
         r = requests.get(f"https://api.wasteof.money/username-from-id/{id}")
         j = r.json()
         if "username" in j:
@@ -58,7 +61,7 @@ class users:
         else:
             raise UnknownUserError(j["error"])
 
-    def isUserAvailable(username: str) -> bool: # I think it is bool
+    def isUserAvailable(username: str) -> bool:  # I think it is bool
         """a function to see if a username is available
 
         Args:
@@ -68,8 +71,8 @@ class users:
             UnknownUserError: an error containing the error from the server
 
         Returns:
-            bool: a boolean stating if the username if available 
-        """        
+            bool: a boolean stating if the username if available
+        """
         r = requests.get(
             f"https://api.wasteof.money/username-available?username={username}"
         )
@@ -77,7 +80,7 @@ class users:
         if "available" in j:
             return j["available"]
         else:
-            raise UnknownUserError(j["error"]) # I think
+            raise UnknownUserError(j["error"])  # I think
 
     def getWall(username: str, page: int = 1) -> dict:
         """a function to get a username's wall
@@ -92,7 +95,7 @@ class users:
 
         Returns:
             dict: a dictionary containing that page of the wall
-        """                 
+        """
         r = requests.get(f"https://api.wasteof.money/users/{username}/wall?page={page}")
         j = r.json()
         if not "error" in j:
@@ -117,7 +120,7 @@ class users:
 
         Returns:
             str: the comment ID
-        """        
+        """
         r = requests.post(
             f"https://api.wasteof.money/users/{username}/wall",
             headers={"Authorization": token},
@@ -143,7 +146,7 @@ class users:
 
         Returns:
             str: the comment ID
-        """        
+        """
         r = requests.post(
             f"https://api.wasteof.money/users/{username}/wall",
             headers={"Authorization": token},
@@ -169,7 +172,7 @@ class session:
 
         Returns:
             str: your wasteof.money session token
-        """        
+        """
         r = requests.post(
             "https://api.wasteof.money/session",
             json={"username": username, "password": password},
@@ -192,7 +195,7 @@ class session:
 
         Returns:
             dict: session information
-        """        
+        """
         r = requests.get(
             "https://api.wasteof.money/session", headers={"Authorization": token}
         )
@@ -213,7 +216,7 @@ class session:
 
         Returns:
             str: success
-        """        
+        """
         r = requests.delete(
             "https://api.wasteof.money/session", headers={"Authorization": token}
         )
@@ -233,7 +236,7 @@ class posts:
 
         Returns:
             dict: _description_
-        """        
+        """
         r = requests.get(
             f"https://api.wasteof.money/explore/posts/trending?timeframe={timeframe}"
         )
@@ -244,7 +247,7 @@ class posts:
 
         Returns:
             dict: the random post
-        """        
+        """
         r = requests.get("https://api.wasteof.money/random-post")
         return r.json()
 
@@ -256,7 +259,7 @@ class posts:
 
         Returns:
             dict: the post
-        """        
+        """
         r = requests.get(f"https://api.wasteof.money/posts/{id}")
         return r.json()
 
@@ -269,7 +272,7 @@ class posts:
 
         Returns:
             dict: the comments of a post and a key called 'last' indicating if it is the last page of comments
-        """        
+        """
         r = requests.get(f"https://api.wasteof.money/posts/{id}/comments?page={page}")
         return r.json()
 
